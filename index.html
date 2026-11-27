@@ -949,9 +949,16 @@
 
     function reportLine(k) {
       const c = CREW[k], s = stateOf(k), rt = rtState(k), rm = rtMode();
+      if (rt && rm === "meeting") {
+        const say = rt.bubble || rt.detail || "안건 논의"
+        ;
+        const extra = (rt.detail && rt.bubble) ? " (" + rt.detail + ")" : "";
+        return "네, 사장님! 지금 회의 중이에요! " + say + extra;
+      }
       if (rt) {
-        const what = rt.detail || rt.bubble || (rm === "meeting" ? "회의 참석" : "작업");
-        return "네, 사장님! 지금 " + asClause(what) + "!";
+        const main = rt.bubble || rt.detail || "작업";
+        const extra = (rt.detail && rt.detail !== main) ? " (" + rt.detail + ")" : "";
+        return "네, 사장님! 지금 " + asClause(main) + "!" + extra;
       }
       if (!s.visible) return "네, 사장님! 지금 퇴근했어요! " + c.hours.replace(/\(.*\)/, "").trim() + "에 다시 출근할게요!";
       if (overtime) return "네, 사장님! 지금 야근 중이에요! " + c.duty + " 마무리하고 있어요!";
