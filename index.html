@@ -599,6 +599,9 @@
     }
     .crew-st.off { background: var(--line); color: var(--muted); }
     .inbox-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       margin-top: 10px;
       border: 0;
@@ -607,6 +610,7 @@
       font-size: 13px;
       font-weight: 900;
       color: #fff;
+      text-decoration: none;
       background: linear-gradient(135deg, #5c6bc0 0%, #8a7be0 100%);
       cursor: pointer;
       box-shadow: 0 6px 14px rgba(92, 107, 192, 0.28);
@@ -798,7 +802,7 @@
       </div>
       <p class="sec-sub" style="margin-bottom:10px;">누르면 문구가 복사돼요. 찰떡이 채팅방에 바로 붙여넣기 하세요!</p>
       <div class="memo-row" style="margin-bottom:14px;">
-        <input id="cmdInput" type="text" placeholder="직접 지시할 문구를 적어보세요" onkeydown="if(event.key==='Enter') copyTyped()" />
+        <input id="cmdInput" type="text" placeholder="직접 지시할 문구를 적어보세요" oninput="syncInboxLink()" onkeydown="if(event.key==='Enter') copyTyped()" />
         <button id="cmdCopyBtn" onclick="copyTyped()">복사</button>
       </div>
       <div class="list">
@@ -807,7 +811,7 @@
         <button class="cmd-chip" onclick="copyCmd(this, '오늘 블로그 조회수랑 새 댓글 확인해줘')"><span>📊 오늘 블로그 반응 체크</span><span>복사</span></button>
         <button class="cmd-chip" onclick="copyCmd(this, '링블 가입 완료됐는지 확인해줘')"><span>✨ 링블 체험단 연동 확인</span><span>복사</span></button>
       </div>
-      <button class="inbox-btn" onclick="openInbox()">📥 비공개 할 일함에 등록하기</button>
+      <a id="inboxLink" class="inbox-btn" href="https://github.com/jjeong-2/Chaldeok-inbox/issues/new" target="_blank" rel="noopener" onclick="return prepareInbox(event)">📥 비공개 할 일함에 등록하기</a>
       <p class="sec-sub" style="margin:7px 0 0;font-size:11.5px;text-align:center;">GitHub 새 탭에서 열려요 · 저장소는 비공개</p>
     </div>
   </div>
@@ -1014,7 +1018,7 @@
     updateTimer();
     setInterval(updateTimer, 30000);
 
-    function openCmd() { document.getElementById("cmdModal").classList.add("open"); }
+    function openCmd() { document.getElementById("cmdModal").classList.add("open"); syncInboxLink(); }
     function closeCmd() { document.getElementById("cmdModal").classList.remove("open"); }
     function copyText(txt) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1039,6 +1043,7 @@
     function copyCmd(btn, txt) {
       lastCmd = txt;
       copyText(txt);
+      syncInboxLink();
       const span = btn.querySelector("span:last-child");
       span.textContent = "복사됨!";
       setTimeout(() => span.textContent = "복사", 1400);
@@ -1051,12 +1056,33 @@
         inp.placeholder = "할 일 제목을 먼저 적어주세요";
         return;
       }
+      syncInboxLink();
+      window.open(document.getElementById("inboxLink").href, "_blank", "noopener");
+    }
+    function inboxUrl(raw) {
       const title = raw.split("\n")[0].slice(0, 120);
       const body = raw + "\n\n---\n· 찰떡 비서실에서 등록\n· 등록 시각: " + new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-      const url = "https://github.com/jjeong-2/Chaldeok-inbox/issues/new"
+      return "https://github.com/jjeong-2/Chaldeok-inbox/issues/new"
         + "?title=" + encodeURIComponent(title)
         + "&body=" + encodeURIComponent(body);
-      window.open(url, "_blank", "noopener");
+    }
+    function syncInboxLink() {
+      const link = document.getElementById("inboxLink");
+      if (!link) return;
+      const raw = (document.getElementById("cmdInput").value || "").trim() || lastCmd;
+      link.href = raw ? inboxUrl(raw) : "https://github.com/jjeong-2/Chaldeok-inbox/issues/new";
+    }
+    function prepareInbox(ev) {
+      const inp = document.getElementById("cmdInput");
+      const raw = (inp.value || "").trim() || lastCmd;
+      if (!raw) {
+        ev.preventDefault();
+        inp.focus();
+        inp.placeholder = "할 일 제목을 먼저 적어주세요";
+        return false;
+      }
+      syncInboxLink();
+      return true;
     }
     function copyTyped() {
       const inp = document.getElementById("cmdInput");
