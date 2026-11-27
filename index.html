@@ -565,6 +565,8 @@
     .pin.off .pdot { background: #b6a89b; animation: none; }
     .pin.off .st { background: rgba(112, 101, 92, 0.88); }
     .pin.off .bubble { display: none; }
+    .stage-dim.night ~ .pin.off { opacity: 0.7; }
+    .dot-green.idle { background: #b6a89b; animation: none; }
 
     /* ── 시간대 조명 ── */
     .stage-dim {
@@ -934,6 +936,8 @@
 
       const live = document.getElementById("liveCount");
       if (live) live.textContent = "현재 " + count + "명 출근 중";
+      const liveDot = document.querySelector(".status-pill .dot-green");
+      if (liveDot) liveDot.classList.toggle("idle", count === 0);
 
       const dim = document.getElementById("stageDim");
       if (dim) {
