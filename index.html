@@ -450,9 +450,11 @@
     .stage.meeting .pin .st { opacity: 0; }
     .stage.meeting .pin:not(.speaking) .plate { opacity: 0; }
     .pin.speaking .plate { box-shadow: 0 0 0 2px rgba(124, 108, 240, 0.6), 0 2px 6px rgba(0, 0, 0, 0.16); }
+    .pin.speaking { z-index: 60 !important; }
     .pin.speaking .bubble {
-      max-width: 116px; font-size: 9px; padding: 4px 8px;
-      box-shadow: 0 4px 14px rgba(124, 108, 240, 0.32);
+      max-width: 98px; font-size: 8.5px; padding: 4px 7px; bottom: calc(100% + 6px);
+      border: 1px solid #ded5ff;
+      box-shadow: 0 6px 16px rgba(124, 108, 240, 0.34);
       animation: speakpop 0.35s ease;
     }
     @keyframes speakpop {
