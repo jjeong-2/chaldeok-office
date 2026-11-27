@@ -586,6 +586,7 @@
       font-size: 10px;
     }
     .pin.walking .avatar { animation: waddle 0.48s ease-in-out infinite; }
+    .pin.walking { opacity: 0.9; }
     @keyframes waddle {
       0%, 100% { transform: rotate(-5deg) translateY(0); }
       50% { transform: rotate(5deg) translateY(-2px); }
@@ -952,7 +953,7 @@
           const b = el.querySelector(".bubble");
           if (b) b.textContent = on ? (overtime ? OT_BUBBLE : (L ? L.bubble : c.onBubble)) : "";
           el.setAttribute("aria-label", c.name + " " + (overtime ? "야근 중" : (L ? L.st : (on ? "근무 중" : "퇴근"))) + " · " + c.hours);
-          placePin(k, el, on);
+          placePin(k, el, on, overtime ? "🚶 야근 복귀" : (L ? "🚶 점심 자리로" : "🚶 출근 중"));
         }
         document.querySelectorAll('.crew-st[data-c="' + k + '"]').forEach(s => {
           s.textContent = overtime ? OT_ST : (L ? L.crew : (on ? "● 근무 중" : "💤 퇴근"));
@@ -994,13 +995,13 @@
       bear: { l: "49%", t: "89%" }
     };
 
-    function placePin(k, el, on) {
+    function placePin(k, el, on, backText) {
       const prev = el.dataset.state || "";
       if (on) {
         el.classList.remove("at-door");
         el.style.left = el.dataset.homeL;
         el.style.top = el.dataset.homeT;
-        if (prev === "off") travel(el, "🚶 출근 중");
+        if (prev === "off") travel(el, backText || "🚶 출근 중");
       } else {
         const spot = DOOR_SPOTS[k];
         el.style.left = spot.l;
