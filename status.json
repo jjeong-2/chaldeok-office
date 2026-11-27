@@ -1,7 +1,28 @@
 {
-  "mode": "idle",
-  "task": "",
-  "updated_at": "2026-11-28T06:18:52+09:00",
-  "expires_at": null,
-  "characters": {}
+  "mode": "meeting",
+  "task": "오피스 회의 테스트",
+  "updated_at": "2026-11-28T06:19:58+09:00",
+  "expires_at": "2026-11-28T06:24:58+09:00",
+  "characters": {
+    "chaldeok": {
+      "room": "meeting",
+      "bubble": "회의 소집!",
+      "active": true
+    },
+    "muse": {
+      "room": "meeting",
+      "bubble": "의견 조율 중!",
+      "active": true
+    },
+    "cat": {
+      "room": "meeting",
+      "bubble": "체험단 의견!",
+      "active": true
+    },
+    "bear": {
+      "room": "meeting",
+      "bubble": "일정 정리 중!",
+      "active": true
+    }
+  }
 }
