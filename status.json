@@ -1,45 +1,8 @@
 {
-  "mode": "working",
-  "task": "토요일 아침 브리핑 & 경제·미장 블로그 2편 작성 중",
+  "mode": "idle",
+  "task": "",
   "agenda": "",
-  "updated_at": "2026-11-28T07:19:44+09:00",
-  "expires_at": "2026-11-28T08:04:44+09:00",
-  "characters": {
-    "chaldeok": {
-      "room": "command",
-      "bubble": "아침 경제·미장 2편 검수 중!",
-      "detail": "",
-      "active": true
-    },
-    "muse": {
-      "room": "meeting",
-      "bubble": "저녁 댓글 2~3건 다는 중!",
-      "detail": "",
-      "active": true
-    },
-    "bear": {
-      "room": "lounge",
-      "bubble": "오늘 일정·체험단 현황 정리 중!",
-      "detail": "",
-      "active": true
-    },
-    "cat": {
-      "room": "work",
-      "bubble": "2:1 이하 배송형 캠페인 추리는 중!",
-      "detail": "",
-      "active": true
-    },
-    "fox": {
-      "room": "work",
-      "bubble": "1편 경제 브리핑 초안 쓰는 중!",
-      "detail": "",
-      "active": true
-    },
-    "chick": {
-      "room": "lounge",
-      "bubble": "이웃 새 글 3건 맞춤 댓글 중!",
-      "detail": "",
-      "active": true
-    }
-  }
+  "updated_at": "2026-11-28T07:45:36+09:00",
+  "expires_at": null,
+  "characters": {}
 }
