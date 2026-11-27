@@ -667,10 +667,11 @@
     const RT_URL = "status.json";
     const RT_POLL_MS = 15000;
     const RT_ROOM_SPOT = { command: [74, 36], meeting: [13, 56], work: [47, 66], lounge: [25, 40] };
-    // 대회의실 원탁(배경 기준 x 10~32%, y 48~70%)을 네 캐릭터가 둘러싸도록 배치
-    const RT_MEET_SPOT = { chaldeok: [11, 55], muse: [25, 45], cat: [37, 57], bear: [22, 69] };
+    // 대회의실 원탁(배경 기준 x 10~32%, y 48~70%)을 네 캐릭터가 둘러싸고 마주 봄
+    const RT_MEET_SPOT = { chaldeok: [9, 49], muse: [29, 46], cat: [12, 68], bear: [30, 67] };
     const RT_FALLBACK_BUBBLE = { meeting: "의견 조율 중!", working: "작업 중!" };
     let rtStatus = null;   // { mode, task, updated_at, expires_at, characters }
+    let rtSpeaker = 0;     // 회의 중 말풍선을 돌아가며 한 명씩 (서로 의견 주고받는 느낌)
 
     /* 지금 실시간 상태가 화면을 지배해야 하는가?
        → 사용자가 시간대 미리보기 칩(08·12·20·02시)을 누르거나 야근 토글을 켠 동안은 그쪽이 우선 */
@@ -695,10 +696,15 @@
       const spot = meeting
         ? (RT_MEET_SPOT[k] || [CREW[k].home.l, CREW[k].home.t])
         : (RT_ROOM_SPOT[info.room] || [CREW[k].home.l, CREW[k].home.t]);
+      let bubble = info.bubble || RT_FALLBACK_BUBBLE[mode];
+      if (meeting) {
+        const speakers = Object.keys(rtStatus.characters || {});
+        if (speakers.length > 1 && speakers[rtSpeaker % speakers.length] !== k) bubble = "";
+      }
       return {
         visible: true, l: spot[0], t: spot[1],
         st: meeting ? "🗣️ 회의 중" : "⚡ 작업 중",
-        bubble: info.bubble || RT_FALLBACK_BUBBLE[mode],
+        bubble: bubble,
         cls: meeting ? "rtm" : "rtw", prop: "", zzz: false, on: true
       };
     }
@@ -755,7 +761,16 @@
       }
       const before = rtKey();
       rtStatus = parseStatus(j);
-      if (rtKey() !== before) renderShift();
+      if (rtKey() !== before) { rtSpeaker = 0; renderShift(); }
+    }
+
+    /* 회의 중에는 말풍선을 3.6초마다 돌아가며 — 네 명이 서로 주고받는 대화처럼 */
+    function paintSpeakerBubble() {
+      Object.keys(CREW).forEach(k => {
+        const el = pin[k];
+        if (!el || el.dataset.busy === "1") return;
+        el.querySelector(".bubble").textContent = stateOf(k).bubble;
+      });
     }
 
     function currentHour() { return simHour === null ? new Date().getHours() : simHour; }
@@ -1104,6 +1119,11 @@
     loadStatus();
     setInterval(loadStatus, RT_POLL_MS);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) loadStatus(); });
+    setInterval(() => {
+      if (rtMode() !== "meeting") return;
+      rtSpeaker += 1;
+      paintSpeakerBubble();
+    }, 3600);
   </script>
 </body>
 </html>
