@@ -100,7 +100,8 @@
     .pin.rtm .st { background: linear-gradient(135deg, #7c6cf0 0%, #a78bfa 100%); }
     .pin.rtw .st { background: linear-gradient(135deg, #4f8517 0%, #7bc950 100%); }
     .pin.rtm .bubble, .pin.rtw .bubble {
-      white-space: normal; max-width: 132px; line-height: 1.25; text-align: center;
+      width: max-content; max-width: 104px;
+      white-space: normal; line-height: 1.25; text-align: center; font-size: 8.5px;
     }
     .pin.rtm .plate { box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.62), 0 2px 6px rgba(0, 0, 0, 0.16); }
     .pin.rtw .plate { box-shadow: 0 0 0 2px rgba(123, 201, 80, 0.65), 0 2px 6px rgba(0, 0, 0, 0.16); }
@@ -666,7 +667,8 @@
     const RT_URL = "status.json";
     const RT_POLL_MS = 15000;
     const RT_ROOM_SPOT = { command: [74, 36], meeting: [13, 56], work: [47, 66], lounge: [25, 40] };
-    const RT_MEET_SPOT = { chaldeok: [12, 54], muse: [25, 50], cat: [17, 63], bear: [29, 60] };
+    // 대회의실 원탁(배경 기준 x 10~32%, y 48~70%)을 네 캐릭터가 둘러싸도록 배치
+    const RT_MEET_SPOT = { chaldeok: [11, 55], muse: [25, 45], cat: [37, 57], bear: [22, 69] };
     const RT_FALLBACK_BUBBLE = { meeting: "의견 조율 중!", working: "작업 중!" };
     let rtStatus = null;   // { mode, task, updated_at, expires_at, characters }
 
