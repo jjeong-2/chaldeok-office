@@ -1,27 +1,37 @@
 {
   "mode": "meeting",
-  "task": "오피스 회의 테스트",
-  "updated_at": "2026-11-28T06:21:33+09:00",
-  "expires_at": "2026-11-28T06:31:33+09:00",
+  "task": "6인 회의 테스트",
+  "updated_at": "2026-11-28T06:26:40+09:00",
+  "expires_at": "2026-11-28T06:41:40+09:00",
   "characters": {
     "chaldeok": {
       "room": "meeting",
-      "bubble": "회의 소집!",
+      "bubble": "좋아, 진행하자!",
       "active": true
     },
     "muse": {
       "room": "meeting",
-      "bubble": "의견 조율 중!",
-      "active": true
-    },
-    "cat": {
-      "room": "meeting",
-      "bubble": "체험단 의견!",
+      "bubble": "검수 의견 드릴게요!",
       "active": true
     },
     "bear": {
       "room": "meeting",
-      "bubble": "일정 정리 중!",
+      "bubble": "일정·마감 확인!",
+      "active": true
+    },
+    "cat": {
+      "room": "meeting",
+      "bubble": "체험단 조건 체크 중!",
+      "active": true
+    },
+    "fox": {
+      "room": "meeting",
+      "bubble": "초안 작성했습니다!",
+      "active": true
+    },
+    "chick": {
+      "room": "meeting",
+      "bubble": "자료 조사해 왔어요!",
       "active": true
     }
   }
