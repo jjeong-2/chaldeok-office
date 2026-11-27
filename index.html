@@ -823,6 +823,7 @@
     const RT_FALLBACK_BUBBLE = { meeting: "의견 조율 중!", working: "작업 중!" };
     let rtStatus = null;   // { mode, task, updated_at, expires_at, characters }
     let rtSpeaker = 0;     // 회의 중 말풍선을 돌아가며 한 명씩 (서로 의견 주고받는 느낌)
+    let otSpeaker = 0;     // 야근 중에도 한 명씩 돌아가며 (말풍선이 겹치지 않게)
 
     /* 지금 실시간 상태가 화면을 지배해야 하는가?
        → 사용자가 시간대 미리보기 칩(08·12·20·02시)을 누르거나 야근 토글을 켠 동안은 그쪽이 우선 */
@@ -1025,7 +1026,11 @@
       const c = CREW[k], h = currentHour();
       const on = overtime ? true : c.isOn(h);
       const lunch = isLunch(h);
-      if (overtime) return { visible: true, l: c.home.l, t: c.home.t, st: OT_ST, bubble: c.otBubble, cls: "otz", prop: "", zzz: false, on: true };
+      if (overtime) {
+        const wk = Object.keys(CREW);
+        const talk = wk[otSpeaker % wk.length] === k;
+        return { visible: true, l: c.home.l, t: c.home.t, st: OT_ST, bubble: talk ? c.otBubble : "", cls: "otz", prop: "", zzz: false, on: true };
+      }
       if (!on) return { visible: false, st: c.offSt, bubble: "", cls: "", prop: "", zzz: false, on: false };
       if (lunch) {
         if (k === "cat") return { visible: false, st: "🚶 점심 외출", bubble: "", cls: "lunchz", prop: "", zzz: false, on: false };
@@ -1370,9 +1375,13 @@
     setInterval(loadStatus, RT_POLL_MS);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) loadStatus(); });
     setInterval(() => {
-      if (rtMode() !== "meeting") return;
-      rtSpeaker += 1;
-      paintSpeakerBubble();
+      if (rtMode() === "meeting") {
+        rtSpeaker += 1;
+        paintSpeakerBubble();
+      } else if (overtime) {
+        otSpeaker += 1;
+        paintSpeakerBubble();
+      }
     }, 3600);
   </script>
 </body>
