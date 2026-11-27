@@ -555,6 +555,9 @@
     .stage.meeting .meet-caption { display: block; }
     .meet-caption b { display: block; font-size: 9.5px; font-weight: 900; color: #5c4fb8; margin-bottom: 2px; }
     .meet-caption span { font-size: 11.5px; line-height: 1.35; font-weight: 800; color: var(--ink); }
+
+    /* 회의실 탭에서는 회의록을 페이지 스크롤로 (중첩 스크롤 방지) */
+    #meetingPanel .meet-min { max-height: none; overflow: visible; }
   </style>
 </head>
 <body>
