@@ -1,7 +1,45 @@
 {
-  "mode": "idle",
-  "task": "",
-  "updated_at": "2026-11-28T06:33:19+09:00",
-  "expires_at": null,
-  "characters": {}
+  "mode": "working",
+  "task": "아침 경제 브리핑 1편 팩트체크 & 대표 이미지 생성 중",
+  "agenda": "",
+  "updated_at": "2026-11-28T06:36:20+09:00",
+  "expires_at": "2026-11-28T07:01:20+09:00",
+  "characters": {
+    "chaldeok": {
+      "room": "command",
+      "bubble": "발행 3건 최종 점검 중!",
+      "detail": "경제 브리핑 1편·낮 유입글 1편 발행 완료, 체험단 6건 신청 확인",
+      "active": true
+    },
+    "muse": {
+      "room": "meeting",
+      "bubble": "저녁 댓글 2~3건 다는 중!",
+      "detail": "20시 이후 이웃 3건 맞춤 댓글 + 답글 검수",
+      "active": true
+    },
+    "bear": {
+      "room": "lounge",
+      "bubble": "마감 D-2 일정 체크 중!",
+      "detail": "정백어가 11/30 마감 · 12/1 애드포스트 신청 알림 등록",
+      "active": true
+    },
+    "cat": {
+      "room": "work",
+      "bubble": "2:1 이하 배송형 캠페인 추리는 중!",
+      "detail": "리뷰노트 4건·레뷰 2건 경쟁률 확인, 6건 신청 예정",
+      "active": true
+    },
+    "fox": {
+      "room": "work",
+      "bubble": "경제 브리핑 초안 쓰는 중!",
+      "detail": "한은 기준금리 3.25% 팩트체크 + SEO 제목 3안 작성",
+      "active": true
+    },
+    "chick": {
+      "room": "lounge",
+      "bubble": "이웃 새 글 3건 맞춤 댓글 중!",
+      "detail": "서이추 5명 신청 · 어미 변주 댓글 3건 작성",
+      "active": true
+    }
+  }
 }
