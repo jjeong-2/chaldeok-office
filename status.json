@@ -1,45 +1,8 @@
 {
-  "mode": "meeting",
-  "task": "오후 2시 발행 일정 확정",
-  "agenda": "오늘 발행 3건 확정 회의",
-  "updated_at": "2026-11-28T06:38:28+09:00",
-  "expires_at": "2026-11-28T06:58:28+09:00",
-  "characters": {
-    "chaldeok": {
-      "room": "meeting",
-      "bubble": "좋아, 오후 2시 발행으로 확정!",
-      "detail": "발행 3건 중 2건 완료, 1건 14시 예약",
-      "active": true
-    },
-    "muse": {
-      "room": "meeting",
-      "bubble": "말투·팩트 체크 끝났어요!",
-      "detail": "금리 3.25% 수치·출처 2곳 교차검증 완료",
-      "active": true
-    },
-    "bear": {
-      "room": "meeting",
-      "bubble": "마감 일정 다 정리했어요!",
-      "detail": "11/30 마감 · 12/1 오전 10시 알림 등록 완료",
-      "active": true
-    },
-    "cat": {
-      "room": "meeting",
-      "bubble": "마감 임박 캠페인 6건 추렸어요!",
-      "detail": "리뷰노트 4건·레뷰 2건 모두 2:1 이하",
-      "active": true
-    },
-    "fox": {
-      "room": "meeting",
-      "bubble": "이슈글 오후 2시 초안 검토요!",
-      "detail": "제목 3안·소제목 5개 정리했습니다",
-      "active": true
-    },
-    "chick": {
-      "room": "meeting",
-      "bubble": "자료 조사해 왔어요!",
-      "detail": "경쟁 블로그 상위 5건 키워드 뽑아왔습니다",
-      "active": true
-    }
-  }
+  "mode": "idle",
+  "task": "",
+  "agenda": "",
+  "updated_at": "2026-11-28T06:40:40+09:00",
+  "expires_at": null,
+  "characters": {}
 }
