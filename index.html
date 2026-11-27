@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="chaldeok-version" content="v5-2026-11-27-sprites" />
+  <meta name="chaldeok-version" content="v5-2026-11-28-quota-unlinked" />
   <title>찰떡 비서실 · Chaldeok Office</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -259,8 +259,13 @@
 
     /* Gauge */
     .gauge-wrap { background: var(--soft); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
-    .gauge-bar { height: 12px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 8px 0; }
-    .gauge-fill { height: 100%; width: 62%; border-radius: 999px; background: linear-gradient(90deg, #a3d959, #ffb48a); }
+    .gauge-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 800; }
+    .gauge-state { font-size: 11px; font-weight: 900; padding: 3px 9px; border-radius: 999px; background: var(--line); color: var(--muted); white-space: nowrap; }
+    .gauge-bar { height: 12px; border-radius: 999px; margin: 8px 0; background: var(--line); }
+    /* 사용량 미연결: 채워진 비율 없이 중립 빗금으로만 표시 */
+    .gauge-bar.unlinked { background: repeating-linear-gradient(135deg, var(--line) 0 8px, var(--soft) 8px 16px); }
+    .gauge-note { margin: 0; font-size: 12px; line-height: 1.45; color: var(--muted); }
+    .tag.mute { background: var(--line); color: var(--muted); }
 
     /* Memo */
     .memo-row { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -480,18 +485,20 @@
       <div class="detail-box" style="margin-top:0">
         <div class="detail-head">
           <div class="detail-title">⚡ AI 한도 & 리셋 타이머</div>
-          <span class="tag peach">80% 안전선</span>
+          <span class="tag mute">미연결</span>
         </div>
         <div class="gauge-wrap">
-          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800;">
-            <span>일일 크레딧 보호 모드</span>
-            <span>안전선 80% 이내 유지</span>
+          <div class="gauge-row">
+            <span>일일 크레딧 사용량</span>
+            <span class="gauge-state">미연결 (앱에서 확인)</span>
           </div>
-          <div class="gauge-bar"><div class="gauge-fill"></div></div>
-          <div style="font-size:12px;color:var(--muted);" id="resetTimer">새벽 04:00 리셋까지 계산 중...</div>
+          <div class="gauge-bar unlinked" role="img" aria-label="사용량 미연결 상태"></div>
+          <p class="gauge-note">실시간 사용량과 연결되어 있지 않아 게이지로는 보여드릴 수 없어요. 실제 크레딧은 앱에서 확인해 주세요.</p>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;" id="resetTimer">새벽 04:00 리셋까지 계산 중...</div>
         </div>
         <ul class="list">
           <li><strong>절약 운영 수칙</strong><span>03:30 사전 알림 · 불필요한 중복 조회 없이 한 번에 처리해요</span></li>
+          <li><strong>목표 한도</strong><span>지시받은 상한(보통 80% 안전선) 안에서 쓰기 · 상한은 그날 지시가 우선</span></li>
         </ul>
       </div>
     </section>
