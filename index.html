@@ -100,7 +100,7 @@
     .pin.rtm .st { background: linear-gradient(135deg, #7c6cf0 0%, #a78bfa 100%); }
     .pin.rtw .st { background: linear-gradient(135deg, #4f8517 0%, #7bc950 100%); }
     .pin.rtm .bubble, .pin.rtw .bubble {
-      width: max-content; max-width: 94px;
+      width: max-content; max-width: 86px;
       white-space: normal; line-height: 1.25; text-align: center; font-size: 8.5px;
     }
     /* 책상이 붙은 두 자리(과장·대리)는 말풍선이 겹치지 않게 바깥쪽으로 */
@@ -224,6 +224,8 @@
       border: 5px solid transparent; border-top-color: #fff;
     }
     .pin .bubble:empty { display: none; }
+    /* 말풍선·이름표는 장식 → 다른 캐릭터 핀 클릭을 가로막지 않게 */
+    .pin .bubble, .pin .plate, .pin .st, .pin .prop, .pin .zzz { pointer-events: none; }
     #pin-muse .bubble { left: 0; transform: none; }
     #pin-muse .bubble::after { left: 24%; }
     .pin.walking .bubble, .pin.gone .bubble { opacity: 0; }
