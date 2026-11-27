@@ -100,9 +100,14 @@
     .pin.rtm .st { background: linear-gradient(135deg, #7c6cf0 0%, #a78bfa 100%); }
     .pin.rtw .st { background: linear-gradient(135deg, #4f8517 0%, #7bc950 100%); }
     .pin.rtm .bubble, .pin.rtw .bubble {
-      width: max-content; max-width: 104px;
+      width: max-content; max-width: 94px;
       white-space: normal; line-height: 1.25; text-align: center; font-size: 8.5px;
     }
+    /* 책상이 붙은 두 자리(과장·대리)는 말풍선이 겹치지 않게 바깥쪽으로 */
+    .pin.rtw#pin-cat .bubble { left: auto; right: 8px; transform: none; }
+    .pin.rtw#pin-cat .bubble::after { left: auto; right: 22px; }
+    .pin.rtw#pin-fox .bubble { left: 8px; transform: none; }
+    .pin.rtw#pin-fox .bubble::after { left: 22px; }
     .pin.rtm .plate { box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.62), 0 2px 6px rgba(0, 0, 0, 0.16); }
     .pin.rtw .plate { box-shadow: 0 0 0 2px rgba(123, 201, 80, 0.65), 0 2px 6px rgba(0, 0, 0, 0.16); }
 
