@@ -542,6 +542,19 @@
     }
     /* 원탁(P)을 화면 중앙으로 끌어오면서 확대 */
     .stage.meeting .stage-hold { transform: translate(23%, -24%) scale(1.5); }
+
+    /* 회의 중: 말하는 사람은 자막 바로, 개별 말풍선은 숨겨 8명이 다 보이게 */
+    .stage.meeting .pin .bubble { display: none; }
+    .meet-caption {
+      position: absolute; left: 9px; right: 9px; top: 9px; z-index: 70; display: none;
+      background: rgba(255, 255, 255, 0.96); border: 1px solid #ded5ff; border-radius: 14px;
+      padding: 8px 11px; box-shadow: 0 8px 20px rgba(80, 60, 160, 0.20);
+      text-align: center;
+    }
+    body.night .meet-caption { background: rgba(46, 41, 54, 0.96); border-color: #4b4166; box-shadow: 0 8px 20px rgba(0,0,0,.4); }
+    .stage.meeting .meet-caption { display: block; }
+    .meet-caption b { display: block; font-size: 9.5px; font-weight: 900; color: #5c4fb8; margin-bottom: 2px; }
+    .meet-caption span { font-size: 11.5px; line-height: 1.35; font-weight: 800; color: var(--ink); }
   </style>
 </head>
 <body>
@@ -686,6 +699,7 @@
             <span class="st">● 근무 중</span>
           </button>
           </div>
+          <div class="meet-caption" id="meetCaption"></div>
         </div>
         <div class="map-legend">
           <span id="timeNote">실시간 기준 계산 중…</span>
@@ -1155,6 +1169,7 @@
       document.getElementById("stage").classList.add("meeting");
       CREW_KEYS.forEach(k => { pin[k].classList.remove("speaking"); });
       renderShift();
+      paintCaption();
       paintMeetingCard(true);
       setTimeout(stepMeeting, 1900);                       // 자리로 걸어간 뒤 첫 발언
       meeting.timer = setInterval(stepMeeting, 4200);
@@ -1170,6 +1185,7 @@
       const line = meeting.script[meeting.idx++];
       meeting.shown.push({ k: line.k, text: line.text, at: new Date() });
       renderShift();
+      paintCaption();
       paintMeetingCard();
     }
 
@@ -1184,8 +1200,22 @@
         pin[k].querySelector(".bubble").textContent = "";
       });
       renderShift();
+      paintCaption();
       paintMeetingCard();
       paintMeetingPanel();
+    }
+
+    function paintCaption() {
+      const cap = document.getElementById("meetCaption");
+      if (!cap) return;
+      if (!meeting) { cap.innerHTML = ""; return; }
+      const cur = meeting.shown[meeting.shown.length - 1];
+      if (!cur) {
+        cap.innerHTML = '<b>🗣️ 회의 시작 · ' + esc(meeting.agenda) + '</b><span>8명이 원탁으로 이동 중이에요…</span>';
+        return;
+      }
+      cap.innerHTML = '<b>' + EMOJI[cur.k] + " " + esc(CREW[cur.k].name) + " " + esc(CREW[cur.k].rank)
+        + '</b><span>' + esc(cur.text) + '</span>';
     }
 
     function meetingState(k) {
