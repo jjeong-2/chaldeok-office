@@ -171,6 +171,7 @@
       transition: opacity 0.3s ease, background 0.3s ease;
     }
     .pin.walking .st, .pin.off .st { background: rgba(120, 106, 95, 0.95); }
+    .pin.hide-st .st { opacity: 0; }
     .pin.otz .st { background: linear-gradient(135deg, #ff6b35 0%, #ff9a3c 100%); }
     .pin.lunchz .st { background: linear-gradient(135deg, #efa93c 0%, #f7c95f 100%); }
     .pin .bubble {
@@ -642,6 +643,7 @@
     function setPos(el, l, t) { el.style.left = l + "%"; el.style.top = t + "%"; }
     function setLabels(el, s) {
       el.querySelector(".st").textContent = s.st;
+      el.classList.toggle("hide-st", s.st === "● 근무 중" || s.st === OT_ST);
       el.querySelector(".bubble").textContent = s.bubble;
       el.classList.toggle("otz", s.cls === "otz");
       el.classList.toggle("lunchz", s.cls === "lunchz");
@@ -668,7 +670,11 @@
     function walkTo(k, l, t, label, s) {
       const el = pin[k];
       el.dataset.busy = "1";
-      if (label) el.querySelector(".st").textContent = label;
+      if (label) {
+        el.querySelector(".st").textContent = label;
+        el.querySelector(".bubble").textContent = "";
+        el.classList.remove("hide-st");
+      }
       el.classList.add("walking");
       setPos(el, l, t);
       clearTimeout(el._walkT);
