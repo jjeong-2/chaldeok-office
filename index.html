@@ -456,6 +456,8 @@
     }
     .pin.ot .st { background: linear-gradient(135deg, #ff6b35 0%, #ff9a3c 100%); }
     .pin.ot .avatar { box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.35), 0 5px 12px rgba(61, 49, 42, 0.25); }
+    .pin.lunch .st { background: linear-gradient(135deg, #efa93c 0%, #f7c95f 100%); }
+    .pin.lunch .avatar { animation-duration: 4.4s; }
     .tdot {
       display: inline-block;
       width: 6px;
@@ -596,6 +598,20 @@
       margin-bottom: 4px;
     }
     .crew-st.off { background: var(--line); color: var(--muted); }
+    .inbox-btn {
+      width: 100%;
+      margin-top: 10px;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(135deg, #5c6bc0 0%, #8a7be0 100%);
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(92, 107, 192, 0.28);
+    }
+    .inbox-btn:active { transform: translateY(1px); }
   </style>
 </head>
 <body>
@@ -791,6 +807,8 @@
         <button class="cmd-chip" onclick="copyCmd(this, '오늘 블로그 조회수랑 새 댓글 확인해줘')"><span>📊 오늘 블로그 반응 체크</span><span>복사</span></button>
         <button class="cmd-chip" onclick="copyCmd(this, '링블 가입 완료됐는지 확인해줘')"><span>✨ 링블 체험단 연동 확인</span><span>복사</span></button>
       </div>
+      <button class="inbox-btn" onclick="openInbox()">📥 비공개 할 일함에 등록하기</button>
+      <p class="sec-sub" style="margin:7px 0 0;font-size:11.5px;text-align:center;">GitHub 새 탭에서 열려요 · 저장소는 비공개</p>
     </div>
   </div>
 
@@ -863,10 +881,17 @@
     };
     const OT_ST = "🔥 야근 중";
     const OT_BUBBLE = "야근 돌입! 열일 중 🔥";
+    const LUNCH = {
+      chaldeok: { st: "🍱 도시락 먹는 중", bubble: "맛있게 먹고 올게요!", crew: "🍱 점심시간" },
+      cat: { st: "🚶 점심 외출 중", bubble: "점심 먹고 금방 와요!", crew: "🍱 점심시간" },
+      bear: { st: "😴 구름소파 낮잠", bubble: "구름소파가 최고야~", crew: "🍱 점심시간" },
+      muse: { st: "💤 18시 출근 대기", bubble: "", crew: "💤 18시 대기" }
+    };
 
     let simHour = null;      // null = 실제 현재 시각
     let overtime = false;    // 🔥 야근 시키기
     let currentZone = "command";
+    let lastCmd = "";        // 마지막으로 선택한 지시문
 
     function currentHour() {
       return simHour === null ? new Date().getHours() : simHour;
@@ -877,24 +902,27 @@
 
     function renderShift() {
       const h = currentHour();
+      const lunch = !overtime && h === 12;
       let count = 0;
       Object.keys(CREW).forEach(k => {
         const c = CREW[k];
         const on = isWorking(k, h);
         if (on) count++;
+        const L = lunch ? LUNCH[k] : null;
         const el = document.getElementById("pin-" + k);
         if (el) {
           el.classList.toggle("on", on);
           el.classList.toggle("off", !on);
           el.classList.toggle("ot", overtime);
+          el.classList.toggle("lunch", !!L && on);
           const st = el.querySelector(".st");
-          if (st) st.textContent = overtime ? OT_ST : (on ? c.onSt : c.offSt);
+          if (st) st.textContent = overtime ? OT_ST : (L ? L.st : (on ? c.onSt : c.offSt));
           const b = el.querySelector(".bubble");
-          if (b) b.textContent = on ? (overtime ? OT_BUBBLE : c.onBubble) : "";
-          el.setAttribute("aria-label", c.name + (on ? " 근무 중" : " 퇴근") + " · " + c.hours);
+          if (b) b.textContent = on ? (overtime ? OT_BUBBLE : (L ? L.bubble : c.onBubble)) : "";
+          el.setAttribute("aria-label", c.name + " " + (overtime ? "야근 중" : (L ? L.st : (on ? "근무 중" : "퇴근"))) + " · " + c.hours);
         }
         document.querySelectorAll('.crew-st[data-c="' + k + '"]').forEach(s => {
-          s.textContent = overtime ? OT_ST : (on ? "● 근무 중" : "💤 퇴근");
+          s.textContent = overtime ? OT_ST : (L ? L.crew : (on ? "● 근무 중" : "💤 퇴근"));
           s.classList.toggle("off", !on);
         });
       });
@@ -916,9 +944,9 @@
         } else if (simHour === null) {
           const now = new Date();
           const hm = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
-          note.textContent = "실시간 " + hm + " 기준 · " + count + "명 근무 중";
+          note.textContent = (lunch ? "🍱 점심시간 · " : "") + "실시간 " + hm + " 기준 · " + count + "명 근무 중";
         } else {
-          note.textContent = "미리보기 " + String(h).padStart(2, "0") + ":00 기준 · " + count + "명 근무 중";
+          note.textContent = (lunch ? "🍱 점심시간 · " : "") + "미리보기 " + String(h).padStart(2, "0") + ":00 기준 · " + count + "명 근무 중";
         }
       }
       if (currentZone) renderZone(currentZone);
@@ -945,7 +973,8 @@
       if (entry) {
         const c = CREW[entry];
         const on = isWorking(entry, currentHour());
-        const stateText = overtime ? "🔥 야근 중" : (on ? "지금 근무 중" : "지금 퇴근");
+        const lunchRow = !overtime && currentHour() === 12 ? LUNCH[entry].st : null;
+        const stateText = overtime ? "🔥 야근 중" : (lunchRow ? lunchRow : (on ? "지금 근무 중" : "지금 퇴근"));
         rows.push(["⏰ 출근표", c.name + " · " + stateText + " (" + c.hours + ")"]);
       }
       document.getElementById("zoneDetail").innerHTML = `
@@ -1008,10 +1037,26 @@
       ta.remove();
     }
     function copyCmd(btn, txt) {
+      lastCmd = txt;
       copyText(txt);
       const span = btn.querySelector("span:last-child");
       span.textContent = "복사됨!";
       setTimeout(() => span.textContent = "복사", 1400);
+    }
+    function openInbox() {
+      const inp = document.getElementById("cmdInput");
+      const raw = (inp.value || "").trim() || lastCmd;
+      if (!raw) {
+        inp.focus();
+        inp.placeholder = "할 일 제목을 먼저 적어주세요";
+        return;
+      }
+      const title = raw.split("\n")[0].slice(0, 120);
+      const body = raw + "\n\n---\n· 찰떡 비서실에서 등록\n· 등록 시각: " + new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+      const url = "https://github.com/jjeong-2/Chaldeok-inbox/issues/new"
+        + "?title=" + encodeURIComponent(title)
+        + "&body=" + encodeURIComponent(body);
+      window.open(url, "_blank", "noopener");
     }
     function copyTyped() {
       const inp = document.getElementById("cmdInput");
