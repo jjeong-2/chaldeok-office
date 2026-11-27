@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="chaldeok-version" content="v10-2026-11-28-eight-crew-meeting-room" />
-  <title>찰떡 비서실 · Chaldeok Office</title>
+  <title>찰떡 &amp; 뮤즈 비서실 · Chaldeok Office</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <style>
@@ -523,6 +523,14 @@
       .head-acts { width: 100%; }
       .head-acts .cmd-btn { flex: 1 1 auto; }
     }
+
+    /* 회의 중: 원탁 쪽으로 시선을 모으는 부드러운 비네트 */
+    .stage-dim.meet {
+      opacity: 1;
+      background: radial-gradient(circle at 28% 74%,
+        rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 24%,
+        rgba(84, 66, 130, 0.14) 64%, rgba(52, 40, 88, 0.26) 100%);
+    }
   </style>
 </head>
 <body>
@@ -531,8 +539,8 @@
       <div class="brand">
         <div class="logo">찰떡</div>
         <div>
-          <div class="brand-title">찰떡 비서실</div>
-          <div class="brand-sub">할로우 님 전용 · 찰떡 &amp; 뮤즈 두 팀 8명의 비밀 아지트</div>
+          <div class="brand-title">찰떡 &amp; 뮤즈 비서실</div>
+          <div class="brand-sub">할로우 님 전용 · 공동 팀장 2명 · 두 팀 8명의 비밀 아지트</div>
         </div>
       </div>
       <button id="nightBtn" class="night-btn">🌙 야간모드</button>
@@ -1507,7 +1515,8 @@
       if (dim) {
         const night = overtime || h >= 23 || h < 7;
         const dusk = !night && h >= 18;
-        dim.className = "stage-dim" + (night ? " night" : (dusk ? " dusk" : ""));
+        dim.className = "stage-dim"
+          + (mt ? " meet" : (night ? " night" : (dusk ? " dusk" : "")));
       }
 
       const note = document.getElementById("timeNote");
