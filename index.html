@@ -210,7 +210,7 @@
       border-radius: 18px; transition: opacity 0.55s ease, background 0.55s ease;
     }
     .stage-dim.dusk { opacity: 1; background: linear-gradient(180deg, rgba(255, 146, 92, 0.14) 0%, rgba(86, 62, 96, 0.30) 100%); }
-    .stage-dim.night { opacity: 1; background: radial-gradient(circle at 50% 30%, rgba(30, 34, 62, 0.42) 0%, rgba(12, 14, 30, 0.64) 100%); }
+    .stage-dim.night { opacity: 1; background: radial-gradient(circle at 50% 30%, rgba(38, 42, 72, 0.30) 0%, rgba(14, 16, 34, 0.52) 100%); }
 
     /* 현관 문 반짝임 (출퇴근 순간) */
     .door-fx {
@@ -574,7 +574,7 @@
         name: "찰떡", zone: "command", home: { l: 74, t: 36 },
         isOn: h => h >= 7 && h < 23,
         onSt: "● 근무 중", offSt: "💤 퇴근 완료",
-        onBubble: "지휘실 대기 중!",
+        onBubble: "지휘실 대기 중!", otBubble: "🔥 지휘 중!",
         hours: "07:00~22:59 출근 · 23:00~06:59 야간 휴식",
         evNow: () => { const n = new Date(); return (n.getHours() === 22 && n.getMinutes() >= 58); }
       },
@@ -582,21 +582,21 @@
         name: "뮤즈", zone: "meeting", home: { l: 13, t: 56 },
         isOn: h => h >= 18 && h < 24,
         onSt: "● 근무 중", offSt: "💤 18시 출근 전",
-        onBubble: "저녁 댓글 도는 중!",
+        onBubble: "저녁 댓글 도는 중!", otBubble: "🔥 댓글 작업!",
         hours: "18:00~23:59 저녁 출근"
       },
       cat: {
         name: "노랑냥", zone: "work", home: { l: 47, t: 66 },
         isOn: h => h >= 9 && h < 18,
         onSt: "● 근무 중", offSt: "💤 퇴근 완료",
-        onBubble: "체험단 신청 중!",
+        onBubble: "체험단 신청 중!", otBubble: "🔥 체험단 훑는 중!",
         hours: "09:00~17:59 주간 출근"
       },
       bear: {
         name: "아기곰", zone: "lounge", home: { l: 33, t: 43 },
         isOn: h => h >= 9 && h < 21,
         onSt: "● 근무 중", offSt: "💤 퇴근 완료",
-        onBubble: "일정 체크 중!",
+        onBubble: "일정 체크 중!", otBubble: "🔥 일정 정리!",
         hours: "09:00~20:59 출근 (일정 체크)"
       }
     };
@@ -627,7 +627,7 @@
       const c = CREW[k], h = currentHour();
       const on = overtime ? true : c.isOn(h);
       const lunch = isLunch(h);
-      if (overtime) return { visible: true, l: c.home.l, t: c.home.t, st: OT_ST, bubble: OT_BUBBLE, cls: "otz", prop: "", zzz: false, on: true };
+      if (overtime) return { visible: true, l: c.home.l, t: c.home.t, st: OT_ST, bubble: c.otBubble, cls: "otz", prop: "", zzz: false, on: true };
       if (!on) return { visible: false, st: c.offSt, bubble: "", cls: "", prop: "", zzz: false, on: false };
       if (lunch) {
         if (k === "cat") return { visible: false, st: "🚶 점심 외출", bubble: "", cls: "lunchz", prop: "", zzz: false, on: false };
