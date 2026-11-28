@@ -1,8 +1,57 @@
 {
-  "mode": "idle",
-  "task": "",
+  "mode": "working",
+  "task": "체험단 당첨·신청 현황 확인 중",
   "agenda": "",
-  "updated_at": "2026-11-28T14:27:39+09:00",
-  "expires_at": null,
-  "characters": {}
+  "updated_at": "2026-11-28T16:31:45+09:00",
+  "expires_at": "2026-11-28T16:56:45+09:00",
+  "characters": {
+    "chaldeok": {
+      "room": "command",
+      "bubble": "오늘 발행 3건 최종 점검 중!",
+      "detail": "",
+      "active": true
+    },
+    "muse": {
+      "room": "meeting",
+      "bubble": "저녁 댓글 2~3건 다는 중!",
+      "detail": "",
+      "active": true
+    },
+    "bear": {
+      "room": "lounge",
+      "bubble": "마감 D-2 일정 체크 중!",
+      "detail": "",
+      "active": true
+    },
+    "cat": {
+      "room": "work",
+      "bubble": "캠페인 추리는 중!",
+      "detail": "리뷰노트·강남맛집·레뷰 당첨 확인 및 저경쟁 배송형 선별",
+      "active": true
+    },
+    "fox": {
+      "room": "work",
+      "bubble": "경제 브리핑 초안 쓰는 중!",
+      "detail": "",
+      "active": true
+    },
+    "chick": {
+      "room": "lounge",
+      "bubble": "이웃 새 글 3건 맞춤 댓글 중!",
+      "detail": "",
+      "active": true
+    },
+    "panda": {
+      "room": "work",
+      "bubble": "수치·출처 교차검증 중!",
+      "detail": "",
+      "active": true
+    },
+    "penguin": {
+      "room": "lounge",
+      "bubble": "저녁 댓글 알림 확인 중!",
+      "detail": "",
+      "active": true
+    }
+  }
 }
