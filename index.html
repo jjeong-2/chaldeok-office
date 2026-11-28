@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="chaldeok-version" content="v12-2026-11-28-sitting-sprites" />
+  <meta name="chaldeok-version" content="v13-2026-11-28-sim-toggle-overtime" />
   <title>찰떡 &amp; 뮤즈 비서실 · Chaldeok Office</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -602,6 +602,42 @@
     .pin.breakz .bubble { max-width: 96px; font-size: 8.5px; }
     .pin.breakz .plate { box-shadow: 0 0 0 2px rgba(240, 163, 60, 0.55), 0 2px 6px rgba(0, 0, 0, 0.16); }
     .zone-badge.c { color: #a8621c; border: 1px solid rgba(240, 163, 60, 0.45); }
+
+    /* ══════════════ v13 · 현재 시각 기본 + ⏱️ 시뮬레이션 분리 · 야근 예약 ══════════════ */
+    .timebar { align-items: center; }
+    /* 기본 노출: 🟢 현재 시각 (HH:MM) 배지 */
+    .tnow {
+      display: inline-flex; align-items: center; flex: 0 0 auto;
+      border: 1px solid #d9edbe; background: linear-gradient(135deg, #f6fce9 0%, #ebf8d6 100%);
+      color: #456d14; border-radius: 999px; padding: 7px 13px;
+      font-size: 12px; font-weight: 900; white-space: nowrap; letter-spacing: .1px;
+      box-shadow: 0 2px 6px rgba(123, 201, 80, 0.14);
+    }
+    .tnow.ticking .tdot { background: #7bc950; }
+    .tnow.sim {
+      border-color: #e0d4fb; background: linear-gradient(135deg, #f8f3ff 0%, #efe6ff 100%);
+      color: #5b4b8a; box-shadow: 0 2px 6px rgba(139, 108, 240, 0.16);
+    }
+    .tnow.sim .tdot { background: #9b7df2; animation: pulse 1.2s infinite; }
+    /* ⏱️ 시뮬레이션 토글 버튼 */
+    .tchip.sim { color: #5b4b8a; border-color: #e0d4fb; background: #f8f3ff; }
+    .tchip.sim.active {
+      color: #fff; background: linear-gradient(135deg, #8b6cf0 0%, #b58cfa 100%);
+      border-color: #9b7df2; box-shadow: 0 4px 12px rgba(139, 108, 240, 0.35);
+    }
+    /* 야근 예약 상태(낮에 미리 켜 둔 상태) */
+    .tchip.fire.reserve { color: #b4761a; border-color: #f7e2b0; background: #fff9ec; }
+    .tchip.fire.reserve.active { color: #fff; background: linear-gradient(135deg, #f0a93a 0%, #ffc45f 100%); border-color: #f3b34b; }
+    /* 시뮬레이션 칩 줄 (기본은 접힘) */
+    .simbar {
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+      padding: 0 2px 10px; animation: simIn 0.18s ease;
+    }
+    .simbar[hidden] { display: none; }
+    .sim-label { font-size: 11px; font-weight: 900; color: var(--muted); margin-right: 2px; }
+    .tchip.live-back { color: #456d14; border-color: #d9edbe; background: #f6fce9; }
+    .tchip.live-back.active { color: #fff; background: #463730; border-color: #463730; }
+    @keyframes simIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
   </style>
 </head>
 <body>
@@ -648,12 +684,18 @@
       </div>
 
       <div class="timebar" id="timeBar">
-        <button class="tchip active" data-h="live"><span class="tdot" id="liveDot"></span>현재 시각</button>
+        <span class="tnow" id="nowBadge"><span class="tdot" id="liveDot"></span><span id="nowText">현재 시각 …</span></span>
+        <button class="tchip fire" id="otBtn" onclick="toggleOvertime()">🔥 야근 시키기</button>
+        <button class="tchip sim" id="simBtn" onclick="toggleSim()" aria-expanded="false" aria-controls="simBar">⏱️ 시뮬레이션</button>
+      </div>
+
+      <div class="simbar" id="simBar" hidden>
+        <span class="sim-label">⏱️ 시간대 미리보기</span>
         <button class="tchip" data-h="8">☀️ 아침 08시</button>
         <button class="tchip" data-h="12">🌤️ 낮 12시</button>
         <button class="tchip" data-h="20">🌙 저녁 20시</button>
         <button class="tchip" data-h="2">🌌 심야 02시</button>
-        <button class="tchip fire" id="otBtn" onclick="toggleOvertime()">🔥 야근 시키기</button>
+        <button class="tchip live-back" data-h="live">🟢 현재 시각으로</button>
       </div>
 
       <div class="map-card">
@@ -1103,10 +1145,20 @@
       panda: { l: 49.6, t: 93.2 }, penguin: { l: 52.8, t: 91.8 }
     };
     const OT_ST = "🔥 야근 중";
+    const OT_RSV = "🔥 야근 예약";
     const OT_BUBBLE = "야근 돌입! 열일 중 🔥";
 
     let simHour = null;      // null = 실제 현재 시각
-    let overtime = false;    // 🔥 야근 시키기
+    let simOpen = false;     // ⏱️ 시뮬레이션 칩 줄 펼침 여부
+    let overtime = false;    // 🔥 야근 시키기 (낮에 켜면 예약, 퇴근 후 시간에 켜면 즉시)
+    const OT_KEY = "chaldeok_overtime_v1";   // 새로고침해도 유지
+
+    function loadOtFlag() {
+      try { return localStorage.getItem(OT_KEY) === "1"; } catch (e) { return false; }
+    }
+    function saveOtFlag(v) {
+      try { localStorage.setItem(OT_KEY, v ? "1" : "0"); } catch (e) {}
+    }
     let currentZone = "teamA";
     let lastCmd = "";
     let talkKey = "chaldeok"; // 말풍선은 한 명씩 돌아가며 (8명이 겹치지 않게)
@@ -1341,7 +1393,7 @@
     /* ─────────── 실시간 상태 (status.json) ─────────── */
     function rtMode() {
       if (meeting) return null;          // 회의 중에는 status.json 보다 회의가 우선
-      if (simHour !== null || overtime) return null;
+      if (simHour !== null || otActive()) return null;
       if (!rtStatus) return null;
       const m = rtStatus.mode;
       if (m !== "meeting" && m !== "working") return null;
@@ -1465,7 +1517,8 @@
         return "네, 사장님! 지금 " + asClause(main) + "!" + extra;
       }
       if (!s.visible) return "네, 사장님! 지금 퇴근했어요! " + c.hours.replace(/\(.*\)/, "").trim() + "에 다시 출근할게요!";
-      if (overtime) return "네, 사장님! 지금 야근 중이에요! " + c.duty + " 마무리하고 있어요!";
+      if (otActive()) return "네, 사장님! 지금 야근 중이에요! " + c.duty + " 마무리하고 있어요!";
+      if (overtime) return "네, 사장님! 오늘 야근 예약해 두셨어서 퇴근 안 하고 " + c.duty + " 이어서 할게요!";
       if (isLunch(currentHour())) {
         if (k === "cat") return "네, 사장님! 지금 점심 먹으러 나왔어요! 금방 들어갈게요!";
         if (k === "bear") return "네, 사장님! 지금 구름소파에서 잠깐 낮잠 중이에요!";
@@ -1493,7 +1546,14 @@
     }
 
     function currentHour() { return simHour === null ? new Date().getHours() : simHour; }
-    function isLunch(h) { return !overtime && h === 12; }
+    /* 이미 퇴근한 시간대(밤 10시~새벽 7시)인가 — 이 시간에 야근을 켜면 즉시 야근 */
+    function isOtNight(h) { return h >= 22 || h < 7; }
+    /* 화면에 실제로 야근 중으로 보여야 하는가 (예약만 걸어 둔 낮에는 false) */
+    function otActive(h) {
+      if (!overtime) return false;
+      return isOtNight(h === undefined || h === null ? currentHour() : h);
+    }
+    function isLunch(h) { return !otActive(h) && h === 12; }
 
     function bubbleOf(c, h) {
       const b = c.onBubble;
@@ -1534,9 +1594,10 @@
       const rt = rtState(k);
       if (rt) return (rtMode() === "meeting") ? rt : breakOverride(k, rt);
       const c = CREW[k], h = currentHour();
-      const on = overtime ? true : c.isOn(h);
+      const nightOt = otActive(h);
+      const on = nightOt ? true : c.isOn(h);
       const lunch = isLunch(h);
-      if (overtime) {
+      if (nightOt) {
         return breakOverride(k, { visible: true, l: c.home.l, t: c.home.t, st: OT_ST, bubble: talkKey === k ? c.otBubble : "", cls: "otz", prop: "", zzz: false, on: true, pose: "sit" });
       }
       if (!on) return { visible: false, st: c.offSt, bubble: "", cls: "", prop: "", zzz: false, on: false, pose: "stand" };
@@ -1681,7 +1742,7 @@
             st.classList.remove("off");
             return;
           }
-          st.textContent = overtime ? OT_ST : s.st;
+          st.textContent = overtime ? (otActive(h) ? OT_ST : OT_RSV) : s.st;
           st.classList.toggle("off", !s.visible);
         });
       });
@@ -1698,7 +1759,7 @@
 
       const dim = document.getElementById("stageDim");
       if (dim) {
-        const night = overtime || h >= 23 || h < 7;
+        const night = otActive(h) || h >= 23 || h < 7;
         const dusk = !night && h >= 18;
         dim.className = "stage-dim"
           + (mt ? " meet" : (night ? " night" : (dusk ? " dusk" : "")));
@@ -1713,7 +1774,8 @@
           const hm = (up && !isNaN(up.getTime())) ? hmNow(up) : "";
           note.textContent = (rm === "meeting" ? "🗣️ 실시간 회의 중 · " : "⚡ 실시간 작업 중 · ")
             + (rtStatus.task || "작업") + (hm ? " · " + hm + " 발행" : "");
-        } else if (overtime) note.textContent = "🔥 야근 모드 · 방에 " + inRoom + "명 남아 열일 중";
+        } else if (otActive(h)) note.textContent = "🔥 야근 모드 · 방에 " + inRoom + "명 남아 열일 중";
+        else if (overtime) note.textContent = "🔥 오늘 야근 예약됨 (퇴근 후 자동 야근) · 지금은 정상 근무 중";
         else if (simHour === null) {
           note.textContent = (lunch ? "🍱 점심시간 · " : "") + "실시간 " + hmNow() + " 기준 · " + inRoom + "명 근무 중";
         } else {
@@ -1724,6 +1786,8 @@
       if (gn) {
         gn.innerHTML = "<em>방 밖 요원:</em> " + (gone.length ? gone.join(" · ") : "없음 — 전원 자리 지킴");
       }
+      paintClock();
+      paintOtBtn();          // 시간대가 바뀌면(22시 이후) 예약 → 야근 중 라벨 자동 전환
       if (currentZone) renderZone(currentZone);
     }
 
@@ -1818,13 +1882,70 @@
         </div>`;
     }
 
+    /* ─────────── ⏱️ 시뮬레이션 · 🔥 야근 버튼 ─────────── */
+    /* 기본 배지는 실제 현재 시각, 시뮬레이션 중에는 그 시각을 보여 준다 */
+    function paintClock() {
+      const t = document.getElementById("nowText");
+      const b = document.getElementById("nowBadge");
+      const sim = simHour !== null;
+      if (t) {
+        t.textContent = sim
+          ? "⏱️ 시뮬레이션 (" + String(simHour).padStart(2, "0") + ":00)"
+          : "현재 시각 (" + hmNow() + ")";
+      }
+      if (b) {
+        b.classList.toggle("sim", sim);
+        b.classList.toggle("ticking", !sim);
+      }
+    }
+    function paintSimBar() {
+      const bar = document.getElementById("simBar");
+      const btn = document.getElementById("simBtn");
+      if (bar) bar.hidden = !simOpen;
+      if (btn) {
+        btn.classList.toggle("active", simOpen || simHour !== null);
+        btn.setAttribute("aria-expanded", simOpen ? "true" : "false");
+        btn.textContent = (simHour !== null)
+          ? "⏱️ 시뮬레이션 " + String(simHour).padStart(2, "0") + "시"
+          : "⏱️ 시뮬레이션";
+      }
+      if (bar) {
+        bar.querySelectorAll(".tchip[data-h]").forEach(c => {
+          const live = c.dataset.h === "live";
+          c.classList.toggle("active", live ? simHour === null : Number(c.dataset.h) === simHour);
+        });
+      }
+    }
+    /* 시뮬레이션 시각 설정 · null 이면 실제 현재 시각으로 복귀 + 칩 줄 닫기 */
+    function setSim(h) {
+      simHour = h;
+      breakOf = {};                       // 시간대를 바꾸면 땡땡이 상태를 새로 계산
+      if (h === null) simOpen = false;    // '현재 시각으로' → 시뮬레이션 접힘
+      paintSimBar(); paintClock(); paintOtBtn(); renderShift();
+    }
+    function toggleSim() {
+      if (simOpen) { setSim(null); return; }   // 다시 누르면 접고 현재 시각으로
+      simOpen = true;
+      paintSimBar(); paintClock();
+    }
+
+    function otMode() { return !overtime ? "off" : (otActive() ? "live" : "reserve"); }
     function paintOtBtn() {
       const b = document.getElementById("otBtn");
-      b.classList.toggle("active", overtime);
-      b.textContent = overtime ? "🔥 야근 중 (해제)" : "🔥 야근 시키기";
+      if (!b) return;
+      const m = otMode();
+      b.classList.toggle("active", m === "live");
+      b.classList.toggle("reserve", m === "reserve");
+      b.textContent = m === "live"
+        ? "🔥 야근 중 (클릭 시 퇴근)"
+        : (m === "reserve" ? "🔥 야근 예약 ON" : "🔥 야근 시키기");
+      b.title = m === "live" ? "지금 야근 중 · 누르면 퇴근합니다"
+        : (m === "reserve" ? "오늘 퇴근 시간 이후 자동으로 야근합니다 · 누르면 예약 해제"
+                           : "지금이 근무 시간이면 오늘 야근 예약, 퇴근 후 시간이면 즉시 야근");
     }
     function toggleOvertime() {
       overtime = !overtime;
+      saveOtFlag(overtime);      // 새로고침해도 유지 (chaldeok_overtime_v1)
       paintOtBtn();
       renderShift();
     }
@@ -1841,7 +1962,7 @@
       const rows = z.items.slice();
       Object.keys(CREW).filter(key => CREW[key].zone === k).forEach(entry => {
         const c = CREW[entry], s = stateOf(entry);
-        const stateText = meeting ? "회의 중" : (overtime ? "🔥 야근 중" : s.st.replace(/^[^0-9A-Za-z가-힣]+/, ""));
+        const stateText = meeting ? "회의 중" : (overtime ? (otActive() ? "🔥 야근 중" : "🔥 야근 예약") : s.st.replace(/^[^0-9A-Za-z가-힣]+/, ""));
         rows.push(["⏰ 출근표", c.name + " " + c.rank + " · " + stateText + " (" + c.hours + ")"]);
       });
       const rep = (lastReport && CREW[lastReport.k] && CREW[lastReport.k].zone === k) ? lastReport : null;
@@ -1992,12 +2113,9 @@
 
     document.querySelectorAll(".tchip[data-h]").forEach(chip => {
       chip.addEventListener("click", () => {
-        document.querySelectorAll(".tchip[data-h]").forEach(c => c.classList.remove("active"));
-        chip.classList.add("active");
-        simHour = chip.dataset.h === "live" ? null : Number(chip.dataset.h);
-        breakOf = {};                     // 시간대를 바꾸면 땡땡이 상태를 새로 계산
-        if (overtime) { overtime = false; paintOtBtn(); }
-        renderShift();
+        // 시뮬레이션 칩: null 이면 실제 현재 시각, 숫자면 그 시각 미리보기
+        // (야근 예약/야근 중 상태는 건드리지 않는다 — 예약해 둔 채 심야로 넘어가면 바로 야근)
+        setSim(chip.dataset.h === "live" ? null : Number(chip.dataset.h));
       });
     });
 
@@ -2005,10 +2123,14 @@
       new Date().getMonth() + 1 + "월 " + new Date().getDate() + "일 (" + "일월화수목금토"[new Date().getDay()] + ")";
 
     renderMemos();
+    overtime = loadOtFlag();     // 🔥 야근 상태 복원 (chaldeok_overtime_v1)
+    paintSimBar();
+    paintClock();
+    paintOtBtn();
     renderShift();
     selectZone("teamA");
     paintMeetingPanel();
-    setInterval(() => { if (simHour === null) renderShift(); }, 20000);
+    setInterval(() => { paintClock(); if (simHour === null) renderShift(); }, 20000);
 
     /* ─────────── ☕ 자율 땡땡이 (v12) ───────────
        15~20초마다 직원 6명 중 한 명이 탕비실·구름소파·라꾸라꾸로 놀러 간다.
@@ -2016,7 +2138,7 @@
        10~15초 뒤에는 자기 책상 의자로 돌아와 다시 앉는다. */
     function anyoneBreaking() { return Object.keys(breakOf).length > 0; }
     function tryBreak() {
-      if (meeting || overtime || simHour !== null) return;
+      if (meeting || otActive() || simHour !== null) return;
       if (isLunch(currentHour())) return;
       if (anyoneBreaking()) return;
       const pool = BREAK_CREW.filter(k => {
