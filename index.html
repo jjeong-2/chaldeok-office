@@ -592,7 +592,7 @@
       50% { transform: rotate(0.45deg) translateY(-0.4px); }
     }
     /* 라꾸라꾸에 누울 때 */
-    .pin.lying .body { transform-origin: 50% 62%; transform: rotate(-54deg) translate(6%, -6%); }
+    .pin.lying .body { transform-origin: 50% 58%; transform: rotate(-56deg) translate(2%, 2%); }
     .pin.lying .char-sit { animation: napbob 5.6s ease-in-out infinite; }
     @keyframes napbob {
       0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -600,7 +600,7 @@
     }
     /* 땡땡이 상태칩·말풍선 */
     .pin.breakz .st { background: linear-gradient(135deg, #e8973a 0%, #ffc95f 100%); color: #fff; }
-    .pin.breakz .bubble { max-width: 108px; font-size: 8.5px; }
+    .pin.breakz .bubble { max-width: 96px; font-size: 8.5px; }
     .pin.breakz .plate { box-shadow: 0 0 0 2px rgba(240, 163, 60, 0.55), 0 2px 6px rgba(0, 0, 0, 0.16); }
     .zone-badge.c { color: #a8621c; border: 1px solid rgba(240, 163, 60, 0.45); }
   </style>
@@ -667,7 +667,7 @@
           <!-- ── 구역 라벨 (지도 위 은은한 배지) ── -->
           <div class="zone-badge a" style="left:30.5%; top:5.2%;">🟢 찰떡 팀</div>
           <div class="zone-badge b" style="left:70.5%; top:5.2%;">🐰 뮤즈 팀</div>
-          <div class="zone-badge c" style="left:82.6%; top:51.4%;">☕ 휴게실 · 탕비실</div>
+          <div class="zone-badge c" style="left:84.0%; top:50.0%;">☕ 휴게실 · 탕비실</div>
 
           <!-- ── 찰떡 팀 (4명 · 왼쪽 연두 러그) ── -->
           <button class="pin on selected" id="pin-chaldeok" data-zone="teamA" data-home-l="23.4" data-home-t="26.7" style="left:23.4%; top:26.7%; --c:#a3d959; --h:36px; --sitdy:5.8px;" onclick="pinReport('chaldeok')" aria-label="찰떡 팀장">
@@ -1075,12 +1075,12 @@
     /* ─────────── ☕ 휴게실 · 탕비실 · 라꾸라꾸 (v12) ───────────
        탕비실 카운터 앞 = 서서 마시기/먹기, 구름소파 = 앉아서 음악·독서,
        라꾸라꾸(간이침대) = 누워서 낮잠. 팀장 2명은 여기 오지 않고 자리를 지킨다. */
-    const SOFA = { l: 86.8, t: 80.6 };            // ☁️ 구름소파 (책 읽기)
-    const SOFA_MUSIC = { l: 81.0, t: 78.0 };      // ☁️ 구름소파 (음악 듣기)
-    const PANTRY_COFFEE = { l: 76.0, t: 67.0 };   // ☕ 탕비실 커피머신 앞
-    const PANTRY_EAT = { l: 80.4, t: 67.7 };      // 🍱 탕비실 카운터 (도시락)
-    const PANTRY_SNACK = { l: 84.4, t: 66.6 };    // 🍩 탕비실 카운터 (간식)
-    const LOUNGE_BED = { l: 70.4, t: 62.2 };      // 🛏️ 라꾸라꾸 간이침대
+    const SOFA = { l: 87.2, t: 81.0 };            // ☁️ 구름소파 (책 읽기)
+    const SOFA_MUSIC = { l: 79.8, t: 77.2 };      // ☁️ 구름소파 (음악 듣기)
+    const PANTRY_COFFEE = { l: 76.8, t: 67.2 };   // ☕ 탕비실 커피머신 앞
+    const PANTRY_EAT = { l: 81.0, t: 67.4 };      // 🍱 탕비실 카운터 (도시락)
+    const PANTRY_SNACK = { l: 85.0, t: 66.9 };    // 🍩 탕비실 카운터 (간식)
+    const LOUNGE_BED = { l: 68.6, t: 62.6 };      // 🛏️ 라꾸라꾸 간이침대
 
     /* 휴게 활동 5종: 소품·상태칩·말풍선·자세(stand/sit/lie) */
     const ACTS = {
@@ -1996,6 +1996,7 @@
         document.querySelectorAll(".tchip[data-h]").forEach(c => c.classList.remove("active"));
         chip.classList.add("active");
         simHour = chip.dataset.h === "live" ? null : Number(chip.dataset.h);
+        breakOf = {};                     // 시간대를 바꾸면 땡땡이 상태를 새로 계산
         if (overtime) { overtime = false; paintOtBtn(); }
         renderShift();
       });
