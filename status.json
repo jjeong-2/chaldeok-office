@@ -1,8 +1,57 @@
 {
-  "mode": "idle",
-  "task": "",
+  "mode": "working",
+  "task": "모두의카드·기후동행패스 유입글 작성 중",
   "agenda": "",
-  "updated_at": "2026-11-28T07:45:36+09:00",
-  "expires_at": null,
-  "characters": {}
+  "updated_at": "2026-11-28T12:02:21+09:00",
+  "expires_at": "2026-11-28T12:37:21+09:00",
+  "characters": {
+    "chaldeok": {
+      "room": "command",
+      "bubble": "오늘 발행 3건 최종 점검 중!",
+      "detail": "",
+      "active": true
+    },
+    "muse": {
+      "room": "meeting",
+      "bubble": "저녁 댓글 2~3건 다는 중!",
+      "detail": "",
+      "active": true
+    },
+    "bear": {
+      "room": "lounge",
+      "bubble": "마감 D-2 일정 체크 중!",
+      "detail": "",
+      "active": true
+    },
+    "cat": {
+      "room": "work",
+      "bubble": "2:1 이하 배송형 캠페인 추리는 중!",
+      "detail": "",
+      "active": true
+    },
+    "fox": {
+      "room": "work",
+      "bubble": "제목 3안 쓰는 중!",
+      "detail": "K-패스·기후동행패스 팩트체크 완료",
+      "active": true
+    },
+    "chick": {
+      "room": "lounge",
+      "bubble": "이웃 새 글 3건 맞춤 댓글 중!",
+      "detail": "",
+      "active": true
+    },
+    "panda": {
+      "room": "work",
+      "bubble": "수치·출처 교차검증 중!",
+      "detail": "",
+      "active": true
+    },
+    "penguin": {
+      "room": "lounge",
+      "bubble": "저녁 댓글 알림 확인 중!",
+      "detail": "",
+      "active": true
+    }
+  }
 }
