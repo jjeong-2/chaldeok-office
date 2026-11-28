@@ -1,57 +1,8 @@
 {
-  "mode": "meeting",
-  "task": "종각 강촌숯불닭갈비 후기 구성 회의 중",
+  "mode": "idle",
+  "task": "",
   "agenda": "",
-  "updated_at": "2026-11-28T14:11:51+09:00",
-  "expires_at": "2026-11-28T14:26:51+09:00",
-  "characters": {
-    "chaldeok": {
-      "room": "meeting",
-      "bubble": "좋아, 오후 2시 발행으로 확정!",
-      "detail": "",
-      "active": true
-    },
-    "muse": {
-      "room": "meeting",
-      "bubble": "말투·팩트 체크 OK!",
-      "detail": "",
-      "active": true
-    },
-    "bear": {
-      "room": "meeting",
-      "bubble": "마감 일정 다 정리했어요!",
-      "detail": "",
-      "active": true
-    },
-    "cat": {
-      "room": "meeting",
-      "bubble": "마감 임박 캠페인 6건 추렸어요!",
-      "detail": "",
-      "active": true
-    },
-    "fox": {
-      "room": "meeting",
-      "bubble": "이슈글 오후 2시 초안 검토요!",
-      "detail": "",
-      "active": true
-    },
-    "chick": {
-      "room": "meeting",
-      "bubble": "자료 조사해 왔어요!",
-      "detail": "",
-      "active": true
-    },
-    "panda": {
-      "room": "meeting",
-      "bubble": "수치·출처 다 확인했어요!",
-      "detail": "",
-      "active": true
-    },
-    "penguin": {
-      "room": "meeting",
-      "bubble": "저녁 댓글 대기 중이에요!",
-      "detail": "",
-      "active": true
-    }
-  }
+  "updated_at": "2026-11-28T14:27:39+09:00",
+  "expires_at": null,
+  "characters": {}
 }
