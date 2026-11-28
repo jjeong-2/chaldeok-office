@@ -592,7 +592,7 @@
       50% { transform: rotate(0.45deg) translateY(-0.4px); }
     }
     /* 라꾸라꾸에 누울 때 */
-    .pin.lying .body { transform-origin: 50% 58%; transform: rotate(-56deg) translate(2%, 2%); }
+    .pin.lying .body { transform-origin: 50% 58%; transform: rotate(-52deg) translate(4%, 0); }
     .pin.lying .char-sit { animation: napbob 5.6s ease-in-out infinite; }
     @keyframes napbob {
       0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -667,7 +667,7 @@
           <!-- ── 구역 라벨 (지도 위 은은한 배지) ── -->
           <div class="zone-badge a" style="left:30.5%; top:5.2%;">🟢 찰떡 팀</div>
           <div class="zone-badge b" style="left:70.5%; top:5.2%;">🐰 뮤즈 팀</div>
-          <div class="zone-badge c" style="left:76.2%; top:68.6%;">☕ 휴게실 · 탕비실</div>
+          <div class="zone-badge c" style="left:88.2%; top:57.6%;">☕ 휴게실 · 탕비실</div>
 
           <!-- ── 찰떡 팀 (4명 · 왼쪽 연두 러그) ── -->
           <button class="pin on selected" id="pin-chaldeok" data-zone="teamA" data-home-l="23.4" data-home-t="26.7" style="left:23.4%; top:26.7%; --c:#a3d959; --h:36px; --sitdy:5.8px;" onclick="pinReport('chaldeok')" aria-label="찰떡 팀장">
@@ -1080,7 +1080,7 @@
     const PANTRY_COFFEE = { l: 75.6, t: 63.2 };   // ☕ 탕비실 커피머신 앞
     const PANTRY_EAT = { l: 79.7, t: 63.4 };      // 🍱 탕비실 카운터 (도시락)
     const PANTRY_SNACK = { l: 83.4, t: 63.0 };    // 🍩 탕비실 카운터 (간식)
-    const LOUNGE_BED = { l: 68.4, t: 61.6 };      // 🛏️ 라꾸라꾸 간이침대
+    const LOUNGE_BED = { l: 69.4, t: 61.2 };      // 🛏️ 라꾸라꾸 간이침대
 
     /* 휴게 활동 5종: 소품·상태칩·말풍선·자세(stand/sit/lie) */
     const ACTS = {
