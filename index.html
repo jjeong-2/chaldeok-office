@@ -579,8 +579,7 @@
 
     /* ══════════════ v12 · 앉은 포즈 / 서기 전환 / 휴게실·탕비실 ══════════════ */
     /* 서기(char-stand) ↔ 앉기(char-sit) 스프라이트를 상태 클래스로 바꿔 끼운다 */
-    .pin .char-stand { display: none; }
-    .pin.sit .char { display: none; }
+    .pin .char-sit, .pin .char-stand { display: none; }
     .pin.sit .char-sit { display: block; }
     .pin:not(.sit) .char-stand { display: block; }
     /* 앉을 때는 엉덩이 접점이 좌표(방석 중심)에 닿도록 살짝 내린다 */
